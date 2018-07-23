@@ -15,6 +15,14 @@
     "lib": [
       "es2017",
       "dom"
-    ]
+    ],
+    "paths": {
+      "material-grid": [
+        "dist/material-grid"
+      ],
+      "material-grid/*": [
+        "dist/material-grid/*"
+      ]
+    }
   }
 }

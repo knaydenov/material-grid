@@ -1,0 +1,108 @@
+<mat-card class="grid">
+  <!-- Header -->
+  <ng-container [ngSwitch]="dataSource.hasSelection">
+  <mat-card-header *ngSwitchCase="false">
+      <mat-card-title *ngIf="title">{{ title | translate }}</mat-card-title>
+      <mat-card-actions class="actions grid-actions">
+        <button color="primary" mat-button *ngIf="showAdd" (click)="addRow()">{{ 'action.add' | translate }}</button>
+      </mat-card-actions>
+      <div class="spacer"></div>
+      <mat-card-actions class="actions row-actions">
+        <button mat-icon-button (click)="dataSource.refresh()" [matTooltip]="'action.refresh' | translate">
+          <mat-icon>refresh</mat-icon>
+        </button>
+      </mat-card-actions>
+  </mat-card-header>
+  <mat-card-header *ngSwitchCase="true" class="selection-header">
+      <mat-card-title *ngIf="dataSource.selection.length" class="selection-label">
+        {{ 'grid.selection' | translate:{count: dataSource.selection.length}  }}
+      </mat-card-title>
+      <div class="spacer"></div>
+      <mat-card-actions class="actions row-actions">
+        <ng-container *ngFor="let action of selectionActions">
+            <button mat-icon-button *ngIf="action.show(dataSource.selection)" (click)="action.handle(dataSource.selection)" [matTooltip]="action.label | translate">
+                <mat-icon>{{ action.icon }}</mat-icon>
+              </button>
+        </ng-container>
+        <button mat-icon-button *ngIf="showPick" (click)="pickRows(dataSource.selection)" [matTooltip]="'action.pick' | translate">
+          <mat-icon>forward</mat-icon>
+        </button>
+        <ng-container *ngIf="moreSelectionActions.length">
+          <button mat-icon-button [matMenuTriggerFor]="moreMassActionsMenu" [matTooltip]="'action.more' | translate">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #moreMassActionsMenu="matMenu">
+            <ng-container *ngFor="let action of moreSelectionActions">
+              <button mat-menu-item *ngIf="action.show(dataSource.selection)" (click)="action.handle(dataSource.selection)" [matTooltip]="action.label | translate">
+                <mat-icon>{{ action.icon }}</mat-icon>
+                <span>{{ action.label | translate }}</span>
+              </button>
+            </ng-container>
+          </mat-menu>
+        </ng-container>
+      </mat-card-actions>
+  </mat-card-header>
+  </ng-container>
+  <mat-divider></mat-divider>
+  <mat-progress-bar *ngIf="dataSource.isLoading" mode="indeterminate"></mat-progress-bar>
+  <div class="filters" style="overflow: hidden;" *ngIf="showFilters">
+    <mat-chip-list #filtersChipList>
+      <mat-chip class="placeholder" *ngIf="!dataSource.activeFilters.length && !filtersAutocomplete.isOpen" disabled>
+          <mat-icon>add</mat-icon>
+        {{ 'filter.add' | translate }}
+      </mat-chip>
+      <mat-chip *ngFor="let filter of dataSource.activeFilters" [value]="filter" (removed)="onFilterRemove($event)" (click)="onFilterEdit(filter, $event)">
+        {{ filter.label | translate }}: 
+        <ng-container [ngSwitch]="filter.multiple">
+          <ng-container *ngSwitchCase="true">{{ filter.viewValue }}</ng-container>
+          <ng-container *ngSwitchCase="false">{{ filter.viewValue | translate }}</ng-container>
+        </ng-container>
+        <mat-icon matChipRemove>cancel</mat-icon>
+      </mat-chip>
+      <input #filterInput [formControl]="filtersInputControl" [matChipInputFor]="filtersChipList" [matAutocomplete]="filtersAutocomplete" />
+    </mat-chip-list>
+    <mat-autocomplete #filtersAutocomplete="matAutocomplete" (optionSelected)="onFilterSelect($event)" [autoActiveFirstOption]="true">
+      <mat-option *ngFor="let filter of dataSource.availableFilters" [value]="filter">
+          {{ filter.label | translate }}<ng-container *ngIf="filter.query">: {{ filter.query }}</ng-container>
+      </mat-option>
+    </mat-autocomplete>
+  </div>
+  <mat-divider></mat-divider>
+  <mat-card-content>
+    <mat-table #table [dataSource]="dataSource">
+
+      <!-- Selection Column -->
+      <ng-container matColumnDef="_selection">
+        <mat-header-cell *matHeaderCellDef class="checkbox">
+          <mat-pseudo-checkbox [state]="dataSource.isNoneSelected ? 'unchecked' : dataSource.isAllSelected ? 'checked' : 'indeterminate'"
+            (click)="dataSource.isNoneSelected ? dataSource.selectAll() : dataSource.selectNone()"></mat-pseudo-checkbox>
+        </mat-header-cell>
+        <mat-cell *matCellDef="let row" class="checkbox">
+          <mat-pseudo-checkbox [state]="dataSource.isItemSelected(row) ? 'checked' : 'unchecked'" (click)="dataSource.toggleSelection(row)"></mat-pseudo-checkbox>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="_actions">
+        <mat-header-cell *matHeaderCellDef style="display: none">
+      
+        </mat-header-cell>
+        <mat-cell *matCellDef="let row" class="actions" style="position: absolute; width: auto;" [style.right.px]="0">
+          <ng-container *ngFor="let action of gridActions">
+            <button mat-icon-button [matTooltip]="action.label | translate" *ngIf="action.show([row])" (click)="action.handle([row])">
+              <mat-icon>{{ action.icon }}</mat-icon>
+            </button>
+          </ng-container>
+          <button *ngIf="showPick" mat-icon-button [matTooltip]="'action.pick' | translate"  (click)="pickRows([row])">
+              <mat-icon>forward</mat-icon>
+          </button>
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="columns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: columns;"></mat-row>
+    </mat-table>
+    <mat-paginator #paginator [pageSize]="dataSource.limit" [length]="dataSource.total" [pageIndex]="dataSource.pageIndex"
+      [pageSizeOptions]="pageSizeOptions" [showFirstLastButtons]="true" (page)="dataSource.handlePageEvent($event)">
+    </mat-paginator>
+  </mat-card-content>
+</mat-card>

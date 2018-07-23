@@ -1,0 +1,55 @@
+.grid {
+    mat-card-header {
+        padding: 0 14px;
+        line-height: 52px;
+        .mat-card-header-text {
+            margin: 0;
+        }
+
+        .spacer {
+            flex: 1;
+        }
+
+        mat-card-actions {
+            margin: 0 0 0 -32px;
+            padding: 0;
+            button {
+                text-transform: uppercase;
+            }
+        }
+    }
+    
+    mat-card-title {
+        margin: 0;
+    }
+
+    mat-cell {
+        &.actions {
+            opacity: 0;
+        }
+    }
+
+    mat-cell.checkbox, mat-header-cell.checkbox {
+        flex: 0 1 48px;
+    }
+
+    mat-row:hover {
+        .actions {
+            opacity: 1;
+        }
+    }
+
+    .filters {
+        padding: 8px 12px 8px 0;
+        padding-left: 16px;
+    }
+
+    mat-chip.placeholder {
+        border: 1px dashed;
+        padding: 2px 12px;
+    }
+}
+
+.grid {
+    padding: 0;
+}

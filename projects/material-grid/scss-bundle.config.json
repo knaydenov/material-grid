@@ -1,0 +1,4 @@
+{
+    "entry": "./src/lib/grid/_grid-theme.scss",
+    "dest": "../../dist/material-grid/_grid-theme.scss"
+  }

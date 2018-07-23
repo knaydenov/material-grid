@@ -1,0 +1,21 @@
+{
+  "name": "@knaydenov/material-grid",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "ng-packagr -p ng-package.json && yarn bundle-styles",
+    "bundle-styles": "scss-bundle -c scss-bundle.config.json"
+  },
+  "peerDependencies": {
+    "@angular/cdk": "^6.4.0",
+    "@angular/common": "^6.0.0-rc.0 || ^6.0.0",
+    "@angular/core": "^6.0.0-rc.0 || ^6.0.0",
+    "@angular/material": "^6.4.0",
+    "@ngx-translate/core": "^10.0.2"
+  },
+  "devDependencies": {
+    "@angular/cdk": "^6.4.0",
+    "@angular/material": "^6.4.0",
+    "scss-bundle": "^2.3.2",
+    "@ngx-translate/core": "^10.0.2"
+  }
+}
