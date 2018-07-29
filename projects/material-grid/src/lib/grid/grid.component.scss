@@ -26,6 +26,7 @@
     mat-cell {
         &.actions {
             opacity: 0;
+            display: none;
         }
     }
 
@@ -36,6 +37,8 @@
     mat-row:hover {
         .actions {
             opacity: 1;
+            display: block;
+            position: absolute;
         }
     }
 
