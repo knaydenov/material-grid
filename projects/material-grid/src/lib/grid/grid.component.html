@@ -33,7 +33,7 @@
           </button>
           <mat-menu #moreMassActionsMenu="matMenu">
             <ng-container *ngFor="let action of moreSelectionActions">
-              <button mat-menu-item *ngIf="action.show(dataSource.selection)" (click)="action.handle(dataSource.selection)" [matTooltip]="action.label | translate">
+              <button mat-menu-item (click)="action.handle(dataSource.selection)" [matTooltip]="action.label | translate">
                 <mat-icon>{{ action.icon }}</mat-icon>
                 <span>{{ action.label | translate }}</span>
               </button>
