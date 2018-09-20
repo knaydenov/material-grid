@@ -38,7 +38,8 @@ export class AppComponent {
   public deleteActionContext = new GridActionContext({
     self: this,
     icon: 'delete',
-    show: () => true
+    show: () => true,
+    more: false
   });
 
   constructor(

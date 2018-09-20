@@ -118,7 +118,7 @@ export class GridComponent implements OnInit, AfterViewInit, AfterContentInit {
   }
 
   get moreSelectionActions() {
-    return this.gridActions.filter(action => action.more);
+    return this.gridActions.filter(action => action.more && action.show(this.dataSource.selection));
   }
 
   get dialog() {
@@ -170,33 +170,13 @@ export class GridComponent implements OnInit, AfterViewInit, AfterContentInit {
   }
 
   onAddFilter($event) {
-    // this.filterInputTrigger.openPanel();
-    // this.filterInput.nativeElement.focus();
-    // this.filterInput.nativeElement.triggerHandler('click');
-    // console.log(this.filterInput);
-    // this.filterInput.nativeElement.focus();
-    // console.log('FOC', this.filterInput.nativeElement.focus);
-    // console.log('KD', this.filterInput.nativeElement.keydown);
-    // window['xxx'] = this.filterInput.nativeElement;
-    // const arrowDownEvent = new KeyboardEvent('keydown', {code: "40"});
-    // this.filterInput.nativeElement.dispatchEvent(arrowDownEvent);
-    // this.filterInputTrigger.
-    // this.filterInput.nativeElement.focus();
-    // this.filterInputTrigger._handleFocus();
-    // this.filterInputTrigger._handleKeydown(<KeyboardEvent>{keyCode: 40, preventDefault: () => {}});
-    // this.filterInputTrigger._handleInput(new KeyboardEvent('keypress', {'key': ' ',}));
-    // var event = new KeyboardEvent('keypress');
-    // Object.defineProperties(event, {
-    //     keyCode: {value: 40},
-    // });
-    // this.filterInputTrigger._handleKeydown(event);
     $event.stopPropagation();
     this.filterInputTrigger.openPanel();
     this.filterInput.nativeElement.focus();
   }
 
   get actionsMargin() {
-    console.log(this.tableElement);
+    // console.log(this.tableElement);
     return 300;
   }
 
