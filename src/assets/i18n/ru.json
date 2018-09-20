@@ -1,0 +1,4 @@
+{
+    "action.add": "Add",
+    "grid.selection": "Selected: {{count}}"
+}
