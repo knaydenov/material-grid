@@ -1,1 +1,27 @@
-/* You can add global styles to this file, and also import other style files */
+@import '~@angular/material/theming';
+@import 'dist/material-grid/grid-theme';
+
+@include mat-core();
+
+$app-primary: mat-palette($mat-blue, A700);
+$app-accent:  mat-palette($mat-red, A400);
+$app-warn:    mat-palette($mat-red);
+
+// Create the theme object (a Sass map containing all of the palettes).
+$app-theme: mat-light-theme($app-primary, $app-accent, $app-warn);
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include angular-material-theme($app-theme);
+
+// @include exercises-theme($app-theme);
+@include grid-theme($app-theme);
+
+$app-typography-config: mat-typography-config();
+
+@include grid-typography($app-typography-config);
+
+body {
+    font-family: Roboto, sans-serif;
+}

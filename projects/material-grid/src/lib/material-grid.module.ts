@@ -28,6 +28,24 @@ import { TranslateModule } from '@ngx-translate/core';
     TranslateModule
   ],
   declarations: [GridComponent, GridActionDirective, GridFilterDirective],
-  exports: [GridComponent, GridActionDirective, GridFilterDirective]
+  exports: [
+    GridComponent,
+    GridActionDirective,
+    GridFilterDirective,
+    MatDialogModule,
+    MatPaginatorModule,
+    MatCardModule,
+    MatTableModule,
+    MatTooltipModule,
+    MatIconModule,
+    MatButtonModule,
+    MatPseudoCheckboxModule,
+    MatAutocompleteModule,
+    MatChipsModule,
+    MatProgressBarModule,
+    MatDividerModule,
+    MatMenuModule,
+    MatIconModule
+  ]
 })
 export class MaterialGridModule { }

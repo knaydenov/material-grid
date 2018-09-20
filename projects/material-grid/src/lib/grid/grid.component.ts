@@ -4,6 +4,7 @@ import { MatColumnDef, MatTable, MatSort, MatAutocompleteSelectedEvent, MatDialo
 import { GridActionDirective } from './grid-action.directive';
 import { GridFilterDirective } from './grid-filter.directive';
 import { FormControl } from '@angular/forms';
+import { MatAutocompleteTrigger } from '@angular/material';
 
 @Component({
   selector: 'grid',
@@ -46,6 +47,7 @@ export class GridComponent implements OnInit, AfterViewInit, AfterContentInit {
   @ViewChild(MatTable) tableElement: ElementRef;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild('filterInput') filterInput: ElementRef;
+  @ViewChild('filterInput', { read: MatAutocompleteTrigger }) filterInputTrigger: MatAutocompleteTrigger;
   @ViewChild('filtersChipList') filtersChipList: MatChipList;
   
   @ContentChildren(MatColumnDef) matColumnDefs: QueryList<MatColumnDef>;
@@ -165,6 +167,32 @@ export class GridComponent implements OnInit, AfterViewInit, AfterContentInit {
     if (!event.srcElement.classList.contains('mat-chip-remove')) {
       this.openFilterDialog(filter);
     }
+  }
+
+  onAddFilter($event) {
+    // this.filterInputTrigger.openPanel();
+    // this.filterInput.nativeElement.focus();
+    // this.filterInput.nativeElement.triggerHandler('click');
+    // console.log(this.filterInput);
+    // this.filterInput.nativeElement.focus();
+    // console.log('FOC', this.filterInput.nativeElement.focus);
+    // console.log('KD', this.filterInput.nativeElement.keydown);
+    // window['xxx'] = this.filterInput.nativeElement;
+    // const arrowDownEvent = new KeyboardEvent('keydown', {code: "40"});
+    // this.filterInput.nativeElement.dispatchEvent(arrowDownEvent);
+    // this.filterInputTrigger.
+    // this.filterInput.nativeElement.focus();
+    // this.filterInputTrigger._handleFocus();
+    // this.filterInputTrigger._handleKeydown(<KeyboardEvent>{keyCode: 40, preventDefault: () => {}});
+    // this.filterInputTrigger._handleInput(new KeyboardEvent('keypress', {'key': ' ',}));
+    // var event = new KeyboardEvent('keypress');
+    // Object.defineProperties(event, {
+    //     keyCode: {value: 40},
+    // });
+    // this.filterInputTrigger._handleKeydown(event);
+    $event.stopPropagation();
+    this.filterInputTrigger.openPanel();
+    this.filterInput.nativeElement.focus();
   }
 
   get actionsMargin() {

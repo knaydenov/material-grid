@@ -47,7 +47,7 @@
   <mat-progress-bar *ngIf="dataSource.isLoading" mode="indeterminate"></mat-progress-bar>
   <div class="filters" style="overflow: hidden;" *ngIf="showFilters">
     <mat-chip-list #filtersChipList>
-      <mat-chip class="placeholder" *ngIf="!dataSource.activeFilters.length && !filtersAutocomplete.isOpen" disabled>
+      <mat-chip class="placeholder" *ngIf="!dataSource.activeFilters.length && !filtersAutocomplete.isOpen" disabled (click)="onAddFilter($event)">
           <mat-icon>add</mat-icon>
         {{ 'filter.add' | translate }}
       </mat-chip>
