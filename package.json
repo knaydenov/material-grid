@@ -11,7 +11,8 @@
     "pack": "cd dist/material-grid && npm pack",
     "build": "ng build material-grid && npm run bundle-styles",
     "clean": "rm -rf node_modules/ dist/ projects/material-grid/node_modules",
-    "bundle-styles": "cd projects/material-grid && scss-bundle -c scss-bundle.config.json"
+    "bundle-styles": "cd projects/material-grid && scss-bundle -c scss-bundle.config.json",
+    "version": "cd projects/material-grid && npm version"
   },
   "private": true,
   "dependencies": {
