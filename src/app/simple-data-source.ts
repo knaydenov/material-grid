@@ -30,13 +30,14 @@ const DATA: IPeriodicElement[] = [
 export class SimpleDataSource extends GridDataSource<IPeriodicElement> {
     private _data = new BehaviorSubject<IPeriodicElement[]>(DATA);
     private _page: number = 1;
-    private _activeFilters: ISimpleFilter[];
+    private _activeFilters: ISimpleFilter[] = [];
 
     get isLoading(): boolean {
         return false;
     }
 
     get items(): IPeriodicElement[] {
+        console.log(this._data.value);
         return this._data.value;
     }
 
@@ -52,15 +53,26 @@ export class SimpleDataSource extends GridDataSource<IPeriodicElement> {
         return this._page;
     }
 
+    applyFilter() {
+        this._data.next(DATA.filter(value => {
+            return this._activeFilters.every(filter => {
+                return value[filter.field] === filter.value;
+            });
+        }) )
+    }
+
     activateFilter(filter: GridFilterDirective) {
         this._activeFilters.push({
             field: filter.key,
             value: filter.toModel(filter.value)
         });
+        this.applyFilter();
     }
 
     deactivateFilter(filter: GridFilterDirective) {
-        this._activeFilters = this._activeFilters.filter(_filter => _filter.field !== filter.field).slice();
+        this._activeFilters = this._activeFilters.filter(_filter => _filter.field !== filter.field);
+        filter.value = undefined;
+        this.applyFilter();
     }
 
     handleSortEvent(event: Sort) {

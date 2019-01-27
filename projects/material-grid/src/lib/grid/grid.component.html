@@ -68,7 +68,7 @@
     </mat-autocomplete>
   </div>
   <mat-divider></mat-divider>
-  <mat-card-content>
+  <mat-card-content [class.hidden]="!dataSource.total">
     <mat-table #table [dataSource]="dataSource">
 
       <!-- Selection Column -->
@@ -104,5 +104,8 @@
     <mat-paginator #paginator [pageSize]="dataSource.limit" [length]="dataSource.total" [pageIndex]="dataSource.pageIndex"
       [pageSizeOptions]="pageSizeOptions" [showFirstLastButtons]="true" (page)="dataSource.handlePageEvent($event)">
     </mat-paginator>
+  </mat-card-content>
+  <mat-card-content [class.hidden]="dataSource.total" class="empty-result">
+    {{ 'grid.emptyResult' | translate }}
   </mat-card-content>
 </mat-card>

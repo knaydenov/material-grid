@@ -1,4 +1,5 @@
 {
     "action.add": "Add",
-    "grid.selection": "Selected: {{count}}"
+    "grid.selection": "Selected: {{count}}",
+    "grid.emptyResult": "No records found"
 }
