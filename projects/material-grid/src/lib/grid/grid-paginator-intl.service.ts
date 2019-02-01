@@ -5,7 +5,7 @@ import { TranslateService } from '@ngx-translate/core';
 enum Label {
   ITEMS_PER_PAGE = "label.gridPaginator.itemsPerPage",
   NEXT_PAGE = "label.gridPaginator.nextPage",
-  PREVIOUS_PAGE = "label..gridPaginator.previousPage",
+  PREVIOUS_PAGE = "label.gridPaginator.previousPage",
   FIRST_PAGE = "label.gridPaginator.firstPage",
   LAST_PAGE = "label.gridPaginator.lastPage",
   OF = "label.gridPaginator.of"
