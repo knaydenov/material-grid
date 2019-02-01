@@ -1,6 +1,6 @@
 {
   "name": "@knaydenov/material-grid",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "peerDependencies": {
     "@angular/cdk": "^6.4.0",
     "@angular/common": "^6.0.0-rc.0 || ^6.0.0",
