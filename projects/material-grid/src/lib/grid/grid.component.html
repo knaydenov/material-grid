@@ -86,7 +86,7 @@
         <mat-header-cell *matHeaderCellDef style="display: none">
       
         </mat-header-cell>
-        <mat-cell *matCellDef="let row" class="actions" style="position: absolute; width: auto;" [style.right.px]="0">
+        <mat-cell *matCellDef="let row" class="actions">
           <ng-container *ngFor="let action of gridActions">
             <button mat-icon-button [matTooltip]="action.label | translate" *ngIf="action.show([row])" (click)="action.handle([row])">
               <mat-icon>{{ action.icon }}</mat-icon>
