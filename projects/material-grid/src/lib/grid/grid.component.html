@@ -4,7 +4,7 @@
   <mat-card-header *ngSwitchCase="false">
       <mat-card-title *ngIf="title">{{ title | translate }}</mat-card-title>
       <mat-card-actions class="actions grid-actions">
-        <button color="primary" mat-button *ngIf="showAdd" (click)="addRow()">{{ 'action.add' | translate }}</button>
+        <button color="primary" mat-button *ngIf="showAdd" (click)="addRow()">{{ addLabel | translate }}</button>
       </mat-card-actions>
       <div class="spacer"></div>
       <mat-card-actions class="actions row-actions">
