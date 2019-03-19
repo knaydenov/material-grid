@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, ContentChildren, AfterContentInit, ViewChild, QueryList, ElementRef, Output, EventEmitter, AfterViewInit } from '@angular/core';
 import { GridDataSource } from '../grid-data-source';
-import { MatColumnDef, MatTable, MatSort, MatAutocompleteSelectedEvent, MatDialog, MatChipList, MatChipEvent, MatDialogRef } from '@angular/material';
+import { MatColumnDef, MatTable, MatSort, MatAutocompleteSelectedEvent, MatDialog, MatChipList, MatChipEvent, MatDialogRef, MatRow } from '@angular/material';
 import { GridActionDirective } from './grid-action.directive';
 import { GridFilterDirective } from './grid-filter.directive';
 import { FormControl } from '@angular/forms';
@@ -18,6 +18,8 @@ export class GridComponent implements OnInit, AfterViewInit, AfterContentInit {
   private _filtersInputControl = new FormControl;
   private _filterQuery: string = null;
   private _showFilters: boolean = true;
+  private _hoveredRowIndex: number = null;
+  private _isRowMenuOpened: boolean = false;
 
   @Input() dataSource: GridDataSource<any>;
   @Input() title: string;
@@ -107,19 +109,33 @@ export class GridComponent implements OnInit, AfterViewInit, AfterContentInit {
   }
 
   get gridFilters() {
-    return this._gridFilters.filter(filter => this.filters.indexOf(filter.field) !== -1);
+    return this
+      .filters
+      .map(filterField => this._gridFilters.find(filter =>  filter.field === filterField))
+      .filter(filter => filter !== undefined);
   }
 
   get gridActions() {
-    return this._gridActions.filter(action => this.actions.indexOf(action.name) !== -1);
+    return this
+      .actions
+      .map(actionName => this._gridActions.find(action =>  action.name === actionName))
+      .filter(action => action !== undefined);
   }
 
-  get selectionActions() {
+  get rowActions() {
     return this.gridActions.filter(action => !action.more);
   }
 
-  get moreSelectionActions() {
+  getRowActions(rows: any[]) {
+    return this.gridActions.filter(action => !action.more && action.show(rows));
+  }
+
+  get moreRowActions() {
     return this.gridActions.filter(action => action.more && action.show(this.dataSource.selection));
+  }
+
+  getMoreRowActions(rows: any[]) {
+    return this.gridActions.filter(action => action.more && action.show(rows));
   }
 
   get dialog() {
@@ -193,4 +209,17 @@ export class GridComponent implements OnInit, AfterViewInit, AfterContentInit {
     this.delete.emit(rows);
   }
 
+  setHoveredRow(index: number|null) {
+    if (!this._isRowMenuOpened) {
+      this._hoveredRowIndex = index;
+    }
+  }
+
+  isRowHovered(index: number) {
+    return this._hoveredRowIndex === index;
+  }
+
+  setRowMenuOpenState(state: boolean) {
+    this._isRowMenuOpened = state;
+  }
 }

@@ -31,8 +31,21 @@ export class AppComponent {
 
   public viewActionContext = new GridActionContext({
     self: this,
-    show: () => true,
+    show: (rows: any[]) => rows.length === 1,
     icon: 'pageview'
+  });
+
+  public editActionContext = new GridActionContext({
+    self: this,
+    show: (rows: any[]) => rows.length === 1,
+    icon: 'edit'
+  });
+
+  public shuffleActionContext = new GridActionContext({
+    self: this,
+    show: (rows: any[]) => rows.length > 1,
+    icon: 'shuffle',
+    more: true
   });
 
   public deleteActionContext = new GridActionContext({
@@ -76,7 +89,7 @@ export class AppComponent {
     return ['position', 'name', 'weight', 'symbol'];
   }
   get actions() {
-    return ['view', 'delete'];
+    return ['view', 'edit', 'shuffle', 'delete'];
   }
   addRow($event) {
 
@@ -85,4 +98,11 @@ export class AppComponent {
 
   }
   
+  viewAction($event) {
+    console.log('Called viewAction', $event);
+  }
+
+  shuffleAction($event) {
+    console.log('Called shuffleAction', $event);
+  }
 }

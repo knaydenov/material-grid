@@ -9,7 +9,7 @@
     $row-hover-color: lighten(mat-color($foreground, 'base'), 97%);
 
     grid {
-        mat-row:hover {
+        mat-row.hovered {
             background-color: $row-hover-color;
         }
         mat-cell {

@@ -37,7 +37,6 @@ export class SimpleDataSource extends GridDataSource<IPeriodicElement> {
     }
 
     get items(): IPeriodicElement[] {
-        console.log(this._data.value);
         return this._data.value;
     }
 
