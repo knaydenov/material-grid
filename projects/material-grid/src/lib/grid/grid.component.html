@@ -19,20 +19,20 @@
       </mat-card-title>
       <div class="spacer"></div>
       <mat-card-actions class="actions row-actions">
-        <ng-container *ngFor="let action of selectionActions">
-            <button mat-icon-button *ngIf="action.show(dataSource.selection)" (click)="action.handle(dataSource.selection)" [matTooltip]="action.label | translate">
-                <mat-icon>{{ action.icon }}</mat-icon>
-              </button>
-        </ng-container>
         <button mat-icon-button *ngIf="showPick" (click)="pickRows(dataSource.selection)" [matTooltip]="'action.pick' | translate">
           <mat-icon>forward</mat-icon>
         </button>
-        <ng-container *ngIf="moreSelectionActions.length">
+        <ng-container *ngFor="let action of getRowActions(dataSource.selection)">
+            <button mat-icon-button (click)="action.handle(dataSource.selection)" [matTooltip]="action.label | translate">
+                <mat-icon>{{ action.icon }}</mat-icon>
+              </button>
+        </ng-container>
+        <ng-container *ngIf="getMoreRowActions(dataSource.selection).length">
           <button mat-icon-button [matMenuTriggerFor]="moreMassActionsMenu" [matTooltip]="'action.more' | translate">
             <mat-icon>more_vert</mat-icon>
           </button>
           <mat-menu #moreMassActionsMenu="matMenu">
-            <ng-container *ngFor="let action of moreSelectionActions">
+            <ng-container *ngFor="let action of getMoreRowActions(dataSource.selection)">
               <button mat-menu-item (click)="action.handle(dataSource.selection)" [matTooltip]="action.label | translate">
                 <mat-icon>{{ action.icon }}</mat-icon>
                 <span>{{ action.label | translate }}</span>
@@ -83,18 +83,29 @@
       </ng-container>
 
       <ng-container matColumnDef="_actions">
-        <mat-header-cell *matHeaderCellDef style="display: none">
-      
-        </mat-header-cell>
+        <mat-header-cell *matHeaderCellDef style="display: none"></mat-header-cell>
         <mat-cell *matCellDef="let row" class="actions">
-          <ng-container *ngFor="let action of gridActions">
-            <button mat-icon-button [matTooltip]="action.label | translate" *ngIf="action.show([row])" (click)="action.handle([row])">
-              <mat-icon>{{ action.icon }}</mat-icon>
-            </button>
-          </ng-container>
           <button *ngIf="showPick" mat-icon-button [matTooltip]="'action.pick' | translate"  (click)="pickRows([row])">
               <mat-icon>forward</mat-icon>
           </button>
+          <ng-container *ngFor="let action of getRowActions([row])">
+              <button mat-icon-button (click)="action.handle([row])" [matTooltip]="action.label | translate">
+                  <mat-icon>{{ action.icon }}</mat-icon>
+                </button>
+          </ng-container>
+          <ng-container *ngIf="getMoreRowActions([row]).length">
+            <button mat-icon-button [matMenuTriggerFor]="moreRowActionsMenu" [matTooltip]="'action.more' | translate">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #moreRowActionsMenu="matMenu">
+              <ng-container *ngFor="let action of getMoreRowActions([row])">
+                <button mat-menu-item (click)="action.handle([row])" [matTooltip]="action.label | translate">
+                  <mat-icon>{{ action.icon }}</mat-icon>
+                  <span>{{ action.label | translate }}</span>
+                </button>
+              </ng-container>
+            </mat-menu>
+          </ng-container>
         </mat-cell>
       </ng-container>
 

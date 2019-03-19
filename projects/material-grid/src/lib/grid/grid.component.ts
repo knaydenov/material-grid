@@ -114,12 +114,20 @@ export class GridComponent implements OnInit, AfterViewInit, AfterContentInit {
     return this._gridActions.filter(action => this.actions.indexOf(action.name) !== -1);
   }
 
-  get selectionActions() {
+  get rowActions() {
     return this.gridActions.filter(action => !action.more);
   }
 
-  get moreSelectionActions() {
+  getRowActions(rows: any[]) {
+    return this.gridActions.filter(action => !action.more && action.show(rows));
+  }
+
+  get moreRowActions() {
     return this.gridActions.filter(action => action.more && action.show(this.dataSource.selection));
+  }
+
+  getMoreRowActions(rows: any[]) {
+    return this.gridActions.filter(action => action.more && action.show(rows));
   }
 
   get dialog() {
