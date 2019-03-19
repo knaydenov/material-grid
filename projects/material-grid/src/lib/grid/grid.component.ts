@@ -107,11 +107,17 @@ export class GridComponent implements OnInit, AfterViewInit, AfterContentInit {
   }
 
   get gridFilters() {
-    return this._gridFilters.filter(filter => this.filters.indexOf(filter.field) !== -1);
+    return this
+      .filters
+      .map(filterField => this._gridFilters.find(filter =>  filter.field === filterField))
+      .filter(filter => filter !== undefined);
   }
 
   get gridActions() {
-    return this._gridActions.filter(action => this.actions.indexOf(action.name) !== -1);
+    return this
+      .actions
+      .map(actionName => this._gridActions.find(action =>  action.name === actionName))
+      .filter(action => action !== undefined);
   }
 
   get rowActions() {

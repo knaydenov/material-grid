@@ -35,6 +35,12 @@ export class AppComponent {
     icon: 'pageview'
   });
 
+  public editActionContext = new GridActionContext({
+    self: this,
+    show: (rows: any[]) => rows.length === 1,
+    icon: 'edit'
+  });
+
   public shuffleActionContext = new GridActionContext({
     self: this,
     show: (rows: any[]) => rows.length > 1,
@@ -83,7 +89,7 @@ export class AppComponent {
     return ['position', 'name', 'weight', 'symbol'];
   }
   get actions() {
-    return ['view', 'shuffle', 'delete'];
+    return ['view', 'edit', 'shuffle', 'delete'];
   }
   addRow($event) {
 
