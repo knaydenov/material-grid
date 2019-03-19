@@ -69,7 +69,7 @@
   </div>
   <mat-divider></mat-divider>
   <mat-card-content [class.hidden]="!dataSource.total">
-    <mat-table #table [dataSource]="dataSource">
+    <mat-table #table [dataSource]="dataSource" (mouseout)="setHoveredRow(null)">
 
       <!-- Selection Column -->
       <ng-container matColumnDef="_selection">
@@ -84,7 +84,7 @@
 
       <ng-container matColumnDef="_actions">
         <mat-header-cell *matHeaderCellDef style="display: none"></mat-header-cell>
-        <mat-cell *matCellDef="let row" class="actions">
+        <mat-cell *matCellDef="let row; let i = index" class="actions">
           <button *ngIf="showPick" mat-icon-button [matTooltip]="'action.pick' | translate"  (click)="pickRows([row])">
               <mat-icon>forward</mat-icon>
           </button>
@@ -94,7 +94,7 @@
                 </button>
           </ng-container>
           <ng-container *ngIf="getMoreRowActions([row]).length">
-            <button mat-icon-button [matMenuTriggerFor]="moreRowActionsMenu" [matTooltip]="'action.more' | translate">
+            <button mat-icon-button [matMenuTriggerFor]="moreRowActionsMenu" [matTooltip]="'action.more' | translate" (menuOpened)="setRowMenuOpenState(true)" (menuClosed)="setRowMenuOpenState(false)">
               <mat-icon>more_vert</mat-icon>
             </button>
             <mat-menu #moreRowActionsMenu="matMenu">
@@ -109,7 +109,7 @@
         </mat-cell>
       </ng-container>
 
-      <mat-header-row *matHeaderRowDef="columns"></mat-header-row>
+      <mat-header-row *matHeaderRowDef="columns" (mouseover)="setHoveredRow(null)"></mat-header-row>
       <mat-row [class.hovered]="isRowHovered(i)" *matRowDef="let row; columns: columns; let i = index" (mouseover)="setHoveredRow(i)"></mat-row>
     </mat-table>
     <mat-paginator #paginator [pageSize]="dataSource.limit" [length]="dataSource.total" [pageIndex]="dataSource.pageIndex"

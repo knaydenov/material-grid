@@ -19,6 +19,7 @@ export class GridComponent implements OnInit, AfterViewInit, AfterContentInit {
   private _filterQuery: string = null;
   private _showFilters: boolean = true;
   private _hoveredRowIndex: number = null;
+  private _isRowMenuOpened: boolean = false;
 
   @Input() dataSource: GridDataSource<any>;
   @Input() title: string;
@@ -209,10 +210,16 @@ export class GridComponent implements OnInit, AfterViewInit, AfterContentInit {
   }
 
   setHoveredRow(index: number|null) {
-    this._hoveredRowIndex = index;
+    if (!this._isRowMenuOpened) {
+      this._hoveredRowIndex = index;
+    }
   }
 
   isRowHovered(index: number) {
     return this._hoveredRowIndex === index;
+  }
+
+  setRowMenuOpenState(state: boolean) {
+    this._isRowMenuOpened = state;
   }
 }
