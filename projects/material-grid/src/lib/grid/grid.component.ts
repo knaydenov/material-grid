@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, ContentChildren, AfterContentInit, ViewChild, QueryList, ElementRef, Output, EventEmitter, AfterViewInit } from '@angular/core';
 import { GridDataSource } from '../grid-data-source';
-import { MatColumnDef, MatTable, MatSort, MatAutocompleteSelectedEvent, MatDialog, MatChipList, MatChipEvent, MatDialogRef } from '@angular/material';
+import { MatColumnDef, MatTable, MatSort, MatAutocompleteSelectedEvent, MatDialog, MatChipList, MatChipEvent, MatDialogRef, MatRow } from '@angular/material';
 import { GridActionDirective } from './grid-action.directive';
 import { GridFilterDirective } from './grid-filter.directive';
 import { FormControl } from '@angular/forms';
@@ -18,6 +18,7 @@ export class GridComponent implements OnInit, AfterViewInit, AfterContentInit {
   private _filtersInputControl = new FormControl;
   private _filterQuery: string = null;
   private _showFilters: boolean = true;
+  private _hoveredRowIndex: number = null;
 
   @Input() dataSource: GridDataSource<any>;
   @Input() title: string;
@@ -207,4 +208,11 @@ export class GridComponent implements OnInit, AfterViewInit, AfterContentInit {
     this.delete.emit(rows);
   }
 
+  setHoveredRow(index: number|null) {
+    this._hoveredRowIndex = index;
+  }
+
+  isRowHovered(index: number) {
+    return this._hoveredRowIndex === index;
+  }
 }

@@ -110,7 +110,7 @@
       </ng-container>
 
       <mat-header-row *matHeaderRowDef="columns"></mat-header-row>
-      <mat-row *matRowDef="let row; columns: columns;"></mat-row>
+      <mat-row [class.hovered]="isRowHovered(i)" *matRowDef="let row; columns: columns; let i = index" (mouseover)="setHoveredRow(i)"></mat-row>
     </mat-table>
     <mat-paginator #paginator [pageSize]="dataSource.limit" [length]="dataSource.total" [pageIndex]="dataSource.pageIndex"
       [pageSizeOptions]="pageSizeOptions" [showFirstLastButtons]="true" (page)="dataSource.handlePageEvent($event)">

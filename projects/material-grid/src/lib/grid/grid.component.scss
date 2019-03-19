@@ -37,7 +37,7 @@
         flex: 0 1 48px;
     }
 
-    mat-row:hover {
+    mat-row.hovered {
         .actions {
             opacity: 1;
             display: block;
