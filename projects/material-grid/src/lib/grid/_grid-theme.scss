@@ -13,18 +13,11 @@
             background-color: $row-hover-color;
         }
 
-        // mat-row.hovered {
-        //     background-color: $row-hover-color;
-        // }
         mat-cell {
             &.actions {
                 background: linear-gradient(to left, $row-hover-color 0%, $row-hover-color 93%,rgba(238,238,238,0.01) 100%);
             }
         }
-
-        // &__row-actions {
-        //     background: linear-gradient(to left, $row-hover-color 0%, $row-hover-color 93%,rgba(238,238,238,0.01) 100%);
-        // }
 
         &__header--has-selection {
             background-color: mat-color($primary, 100);
@@ -42,21 +35,14 @@
 }
 
 @mixin grid-typography($config) {
-    grid {
-        .mat-card-header {
-            .mat-card-title {
-                @include mat-typography-level-to-styles($config, title);
-                line-height: 52px;
-                &.selection-label {
-                    @include mat-typography-level-to-styles($config, body-2);
-                    line-height: 52px;
-                }
-            }
+    .grid {
+        &__selection-label {
+            @include mat-typography-level-to-styles($config, body-2);
+            line-height: 52px;
         }
 
-        .mat-chip.placeholder {
+        &__filter-placeholder {
             @include mat-typography-level-to-styles($config, body-2);
         }
-        
     }
 }
