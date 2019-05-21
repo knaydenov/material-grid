@@ -8,39 +8,41 @@
 
     $row-hover-color: lighten(mat-color($foreground, 'base'), 97%);
 
-    grid {
-        mat-row.hovered {
+    .grid {
+        &__row--hovered {
             background-color: $row-hover-color;
         }
+
+        // mat-row.hovered {
+        //     background-color: $row-hover-color;
+        // }
         mat-cell {
             &.actions {
                 background: linear-gradient(to left, $row-hover-color 0%, $row-hover-color 93%,rgba(238,238,238,0.01) 100%);
             }
         }
 
-        mat-card-header {
-            &.selection-header {
-                background-color: mat-color($primary, 100);
-            }
-            .selection-label {
-                color: mat-color($primary, 500);
-            }
+        // &__row-actions {
+        //     background: linear-gradient(to left, $row-hover-color 0%, $row-hover-color 93%,rgba(238,238,238,0.01) 100%);
+        // }
+
+        &__header--has-selection {
+            background-color: mat-color($primary, 100);
         }
 
-        .mat-chip.placeholder {
-            background-color: mat-color($background, card);
-            color: mat-color($foreground, divider);
+        &__selection-label {
+            color: mat-color($primary, 500);
+        }
+
+        &__filter-placeholder {
+            background-color: mat-color($background, card) !important;
+            color: mat-color($foreground, divider) !important;
         }
     }
 }
 
 @mixin grid-typography($config) {
     grid {
-        mat-card-header {
-            .mat-card-header-text {
-            }
-        }
-
         .mat-card-header {
             .mat-card-title {
                 @include mat-typography-level-to-styles($config, title);

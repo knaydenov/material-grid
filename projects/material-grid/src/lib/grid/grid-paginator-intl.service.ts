@@ -3,12 +3,12 @@ import { MatPaginatorIntl } from '@angular/material';
 import { TranslateService } from '@ngx-translate/core';
 
 enum Label {
-  ITEMS_PER_PAGE = "label.gridPaginator.itemsPerPage",
-  NEXT_PAGE = "label.gridPaginator.nextPage",
-  PREVIOUS_PAGE = "label.gridPaginator.previousPage",
-  FIRST_PAGE = "label.gridPaginator.firstPage",
-  LAST_PAGE = "label.gridPaginator.lastPage",
-  OF = "label.gridPaginator.of"
+  ITEMS_PER_PAGE = "Items per page:",
+  NEXT_PAGE = "Next page",
+  PREVIOUS_PAGE = "Previous page",
+  FIRST_PAGE = "First page",
+  LAST_PAGE = "Last page",
+  OF = "of"
 }
 
 @Injectable({
