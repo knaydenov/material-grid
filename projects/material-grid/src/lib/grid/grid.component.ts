@@ -40,7 +40,13 @@ export class GridComponent implements OnInit, AfterViewInit, AfterContentInit {
     this._showFilters = showFilters;
   }
   @Input() pageSizeOptions: number[] = [5, 10, 50];
-  @Input() addLabel: string = 'action.add';
+  @Input() addLabel: string = 'Add';
+  @Input() selectionLabel: string = 'Selected:';
+  @Input() actionMoreLabel: string = 'Show more actions';
+  @Input() actionPickLabel: string = 'Pick';
+  @Input() actionRefreshLabel: string = 'Refresh';
+  @Input() addFilterLabel: string = 'Add filter';
+  @Input() emptyResultLabel: string = 'No records found';
 
   @Output() add = new EventEmitter<any>();
   @Output() pick = new EventEmitter<any[]>();

@@ -9,18 +9,18 @@
         </div>
         <div class="grid__header-spacer"></div>
         <div class="grid__header-actions">
-          <button mat-icon-button (click)="dataSource.refresh()" [matTooltip]="'action.refresh' | translate">
+          <button mat-icon-button (click)="dataSource.refresh()" [matTooltip]="actionRefreshLabel | translate">
             <mat-icon>refresh</mat-icon>
           </button>
         </div>
       </ng-container>
       <ng-container *ngSwitchCase="true">
         <div *ngIf="dataSource.selection.length" class="grid__selection-label">
-          {{ 'grid.selection' | translate:{count: dataSource.selection.length}  }}
+          {{ selectionLabel | translate:{count: dataSource.selection.length}  }}
         </div>
         <div class="grid__header-spacer"></div>
         <div class="grid__header-actions">
-          <button mat-icon-button *ngIf="showPick" (click)="pickRows(dataSource.selection)" [matTooltip]="'action.pick' | translate">
+          <button mat-icon-button *ngIf="showPick" (click)="pickRows(dataSource.selection)" [matTooltip]="actionPickLabel | translate">
             <mat-icon>forward</mat-icon>
           </button>
           <ng-container *ngFor="let action of getRowActions(dataSource.selection)">
@@ -29,7 +29,7 @@
                 </button>
           </ng-container>
           <ng-container *ngIf="getMoreRowActions(dataSource.selection).length">
-            <button mat-icon-button [matMenuTriggerFor]="moreMassActionsMenu" [matTooltip]="'action.more' | translate">
+            <button mat-icon-button [matMenuTriggerFor]="moreMassActionsMenu" [matTooltip]="actionMoreLabel | translate">
               <mat-icon>more_vert</mat-icon>
             </button>
             <mat-menu #moreMassActionsMenu="matMenu">
@@ -52,7 +52,7 @@
     <mat-chip-list #filtersChipList>
       <mat-chip class="grid__filter-placeholder" *ngIf="!dataSource.activeFilters.length && !filtersAutocomplete.isOpen" disabled (click)="onAddFilter($event)">
           <mat-icon>add</mat-icon>
-        {{ 'filter.add' | translate }}
+        {{ addFilterLabel | translate }}
       </mat-chip>
       <mat-chip *ngFor="let filter of dataSource.activeFilters" [value]="filter" (removed)="onFilterRemove($event)" (click)="onFilterEdit(filter, $event)">
         {{ filter.label | translate }}: 
@@ -88,7 +88,7 @@
       <ng-container matColumnDef="_actions">
         <mat-header-cell *matHeaderCellDef style="display: none"></mat-header-cell>
         <mat-cell *matCellDef="let row; let i = index" class="grid__row-actions">
-          <button *ngIf="showPick" mat-icon-button [matTooltip]="'action.pick' | translate"  (click)="pickRows([row])">
+          <button *ngIf="showPick" mat-icon-button [matTooltip]="actionPickLabel | translate"  (click)="pickRows([row])">
               <mat-icon>forward</mat-icon>
           </button>
           <ng-container *ngFor="let action of getRowActions([row])">
@@ -97,7 +97,7 @@
                 </button>
           </ng-container>
           <ng-container *ngIf="getMoreRowActions([row]).length">
-            <button mat-icon-button [matMenuTriggerFor]="moreRowActionsMenu" [matTooltip]="'action.more' | translate" (menuOpened)="setRowMenuOpenState(true)" (menuClosed)="setRowMenuOpenState(false)">
+            <button mat-icon-button [matMenuTriggerFor]="moreRowActionsMenu" [matTooltip]="actionMoreLabel | translate" (menuOpened)="setRowMenuOpenState(true)" (menuClosed)="setRowMenuOpenState(false)">
               <mat-icon>more_vert</mat-icon>
             </button>
             <mat-menu #moreRowActionsMenu="matMenu">
@@ -120,6 +120,6 @@
     </mat-paginator>
   </div>
   <div class="grid__content" [ngClass]="{'grid__content--hidden': dataSource.total}">
-    <div class="grid__empty-result">{{ 'grid.emptyResult' | translate }}</div>
+    <div class="grid__empty-result">{{ emptyResultLabel | translate }}</div>
   </div>
 </div>
