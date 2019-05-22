@@ -168,6 +168,8 @@ export class GridComponent implements OnInit, AfterViewInit, AfterContentInit {
         filter.value = result;
         this.dataSource.activateFilter(filter);
       }
+      this.filterInput.nativeElement.blur();
+      this.filterInputTrigger.closePanel();
     });
   }
 
