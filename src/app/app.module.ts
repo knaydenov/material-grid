@@ -34,6 +34,7 @@ export function createTranslateLoader(http: HttpClient) {
     }),
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [TextPickComponent]
 })
 export class AppModule { }
