@@ -47,6 +47,7 @@ export class GridComponent implements OnInit, AfterViewInit, AfterContentInit {
   @Input() actionRefreshLabel: string = 'Refresh';
   @Input() addFilterLabel: string = 'Add filter';
   @Input() emptyResultLabel: string = 'No records found';
+  @Input() minCellWidth: number = 200;
 
   @Output() add = new EventEmitter<any>();
   @Output() pick = new EventEmitter<any[]>();
@@ -230,5 +231,9 @@ export class GridComponent implements OnInit, AfterViewInit, AfterContentInit {
 
   setRowMenuOpenState(state: boolean) {
     this._isRowMenuOpened = state;
+  }
+
+  get minRowWidth() {
+    return (this.columns.length - 1 - (this.showSelection ? 1 : 0)) * this.minCellWidth + (this.showSelection ? 72 : 0);
   }
 }
