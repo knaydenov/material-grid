@@ -64,3 +64,11 @@
         cursor: pointer;
     }
 }
+
+.mat-row, .mat-header-row, .mat-footer-row {
+    min-width: 1200px;
+}
+
+.mat-table {
+    overflow-x: auto;
+}
