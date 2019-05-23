@@ -13,10 +13,8 @@
             background-color: $row-hover-color;
         }
 
-        mat-cell {
-            &.actions {
-                background: linear-gradient(to left, $row-hover-color 0%, $row-hover-color 93%,rgba(238,238,238,0.01) 100%);
-            }
+        &__row-actions {
+            background: linear-gradient(to left, $row-hover-color 0%, $row-hover-color 93%,rgba(238,238,238,0.01) 100%);
         }
 
         &__header--has-selection {
