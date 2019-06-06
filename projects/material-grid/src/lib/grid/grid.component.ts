@@ -53,12 +53,12 @@ export class GridComponent implements OnInit, AfterViewInit, AfterContentInit {
   @Output() pick = new EventEmitter<any[]>();
   @Output() delete = new EventEmitter<any[]>();
 
-  @ViewChild(MatTable) table: MatTable<any>;
-  @ViewChild(MatTable) tableElement: ElementRef;
-  @ViewChild(MatSort) sort: MatSort;
-  @ViewChild('filterInput') filterInput: ElementRef;
-  @ViewChild('filterInput', { read: MatAutocompleteTrigger }) filterInputTrigger: MatAutocompleteTrigger;
-  @ViewChild('filtersChipList') filtersChipList: MatChipList;
+  @ViewChild(MatTable, { static: true }) table: MatTable<any>;
+  @ViewChild(MatTable, { static: true }) tableElement: ElementRef;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  @ViewChild('filterInput', { static: false }) filterInput: ElementRef;
+  @ViewChild('filterInput', { read: MatAutocompleteTrigger, static: false }) filterInputTrigger: MatAutocompleteTrigger;
+  @ViewChild('filtersChipList', { static: true }) filtersChipList: MatChipList;
   
   @ContentChildren(MatColumnDef) matColumnDefs: QueryList<MatColumnDef>;
   @ContentChildren(GridActionDirective) _gridActions: QueryList<GridActionDirective>;
@@ -191,9 +191,7 @@ export class GridComponent implements OnInit, AfterViewInit, AfterContentInit {
   }
 
   onFilterEdit(filter: GridFilterDirective, event: MouseEvent) {
-    if (!event.srcElement.classList.contains('mat-chip-remove')) {
-      this.openFilterDialog(filter);
-    }
+    this.openFilterDialog(filter);
   }
 
   onAddFilter($event) {
