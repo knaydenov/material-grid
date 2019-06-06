@@ -28,7 +28,7 @@
     "@angular/router": "^8.0.0",
     "@ngx-translate/core": "^10.0.2",
     "@ngx-translate/http-loader": "^3.0.1",
-    "@knaydenov/material-grid": "^2.0.0",
+    "@knaydenov/material-grid": "file:dist/material-grid",
     "core-js": "^2.5.4",
     "rxjs": "^6.5.2",
     "zone.js": "^0.9.1"
