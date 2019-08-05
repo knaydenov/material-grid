@@ -1,7 +1,8 @@
 <h1 mat-dialog-title>Text</h1>
 <div mat-dialog-content>
+  <input type="text" [formControl]="textControl"/>
 </div>
 <div mat-dialog-actions>
   <button mat-button [mat-dialog-close]>CANCEL</button>
-  <button mat-button [mat-dialog-close]="'text'" cdkFocusInitial>OK</button>
+  <button mat-button [mat-dialog-close]="textControl.value" cdkFocusInitial>OK</button>
 </div>

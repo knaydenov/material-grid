@@ -1,6 +1,6 @@
-import { GridDataSource, GridFilterDirective } from 'material-grid';
+import { GridDataSource, GridFilterDefDirective } from 'material-grid';
 import { Sort, PageEvent } from "@angular/material";
-import { Observable, BehaviorSubject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 
 export interface IPeriodicElement {
     name: string;
@@ -55,20 +55,20 @@ export class SimpleDataSource extends GridDataSource<IPeriodicElement> {
     applyFilter() {
         this._data.next(DATA.filter(value => {
             return this._activeFilters.every(filter => {
-                return value[filter.field] === filter.value;
+                return String(value[filter.field]).toLowerCase().includes(filter.value.toLowerCase());
             });
         }) )
     }
 
-    activateFilter(filter: GridFilterDirective) {
+    activateFilter(filter: GridFilterDefDirective) {
         this._activeFilters.push({
-            field: filter.key,
-            value: filter.toModel(filter.value)
+            field: filter.field,
+            value: filter.convertToModelValue(filter.value)
         });
         this.applyFilter();
     }
 
-    deactivateFilter(filter: GridFilterDirective) {
+    deactivateFilter(filter: GridFilterDefDirective) {
         this._activeFilters = this._activeFilters.filter(_filter => _filter.field !== filter.field);
         filter.value = undefined;
         this.applyFilter();
