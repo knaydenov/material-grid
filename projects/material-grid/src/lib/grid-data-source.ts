@@ -1,15 +1,15 @@
 import { DataSource, SelectionModel } from "@angular/cdk/collections";
-import { GridFilterDirective } from "./grid/grid-filter.directive";
 import { Sort, PageEvent } from "@angular/material";
+import { GridFilterDefDirective } from "./grid/grid-filter-def.directive";
 
 export abstract class GridDataSource<T> extends DataSource<T> {
-    private _filters: GridFilterDirective[] = [];
+    private _filters: GridFilterDefDirective[] = [];
     private _selectionModel: SelectionModel<any> = new SelectionModel<T>(true, [], true);
 
     abstract get isLoading(): boolean;
     abstract get items(): T[];
-    abstract activateFilter(filter: GridFilterDirective);
-    abstract deactivateFilter(filter: GridFilterDirective);
+    abstract activateFilter(filter: GridFilterDefDirective);
+    abstract deactivateFilter(filter: GridFilterDefDirective);
     abstract handleSortEvent(event: Sort);
     abstract handlePageEvent(event: PageEvent);
     abstract get limit(): number;
@@ -57,19 +57,11 @@ export abstract class GridDataSource<T> extends DataSource<T> {
         this.selectionModel.clear();
     }
 
-    get filters(): GridFilterDirective[] {
+    get filters(): GridFilterDefDirective[] {
         return this._filters;
     }
 
-    set filters(filters: GridFilterDirective[]) {
+    set filters(filters: GridFilterDefDirective[]) {
         this._filters = filters;
-    }
-
-    get activeFilters(): GridFilterDirective[] {
-        return this.filters.filter(filter => filter.isActive);
-    }
-
-    get availableFilters(): GridFilterDirective[] {
-        return this.filters.filter(filter => !filter.isActive && filter.isSupported);
     }
 }

@@ -1,10 +1,10 @@
 import { Component, OnInit, Input, ContentChildren, AfterContentInit, ViewChild, QueryList, ElementRef, Output, EventEmitter, AfterViewInit } from '@angular/core';
 import { GridDataSource } from '../grid-data-source';
-import { MatColumnDef, MatTable, MatSort, MatAutocompleteSelectedEvent, MatDialog, MatChipList, MatChipEvent, MatDialogRef, MatRow } from '@angular/material';
-import { GridActionDirective } from './grid-action.directive';
-import { GridFilterDirective } from './grid-filter.directive';
+import { MatColumnDef, MatTable, MatSort, MatAutocompleteSelectedEvent, MatChipList, MatChipEvent } from '@angular/material';
 import { FormControl } from '@angular/forms';
 import { MatAutocompleteTrigger } from '@angular/material';
+import { GridActionDefDirective, Strategy } from './grid-action-def.directive';
+import { GridFilterDefDirective } from './grid-filter-def.directive';
 
 @Component({
   selector: 'grid',
@@ -13,8 +13,8 @@ import { MatAutocompleteTrigger } from '@angular/material';
 })
 export class GridComponent implements OnInit, AfterViewInit, AfterContentInit {
   private _columns: string[] = [];
-  private _filters: string[] = [];
-  private _actions: string[] = [];
+  private _visibleFilterNames: string[] = [];
+  private _visbleActionNames: string[] = [];
   private _filtersInputControl = new FormControl;
   private _filterQuery: string = null;
   private _showFilters: boolean = true;
@@ -26,32 +26,34 @@ export class GridComponent implements OnInit, AfterViewInit, AfterContentInit {
   @Input() set columns(columns: string[]) {
     this._columns = columns;
   }
-  @Input() set filters(filters: string[]) {
-    this._filters = filters;
+
+  @Input('filters')
+  get visibleFilterNames() {
+    return this._visibleFilterNames;
   }
-  @Input() set actions(actions: string[]) {
-    this._actions = actions;
+  set visibleFilterNames(filters: string[]) {
+    this._visibleFilterNames = filters;
   }
-  @Input() showAdd = false;
-  @Input() showPick = false;
+  @Input('actions')
+  get visbleActionNames() {
+    return this._visbleActionNames;
+  }
+  set visbleActionNames(actions: string[]) {
+    this._visbleActionNames = actions;
+  }
+
   @Input() showSelection = false;
   @Input() showState = false;
   @Input() set showFilters(showFilters: boolean) {
     this._showFilters = showFilters;
   }
   @Input() pageSizeOptions: number[] = [5, 10, 50];
-  @Input() addLabel: string = 'Add';
   @Input() selectionLabel: string = 'Selected:';
-  @Input() actionMoreLabel: string = 'Show more actions';
-  @Input() actionPickLabel: string = 'Pick';
-  @Input() actionRefreshLabel: string = 'Refresh';
+  @Input() moreLabel: string = 'Show more actions';
+  @Input() refreshLabel: string = 'Refresh';
   @Input() addFilterLabel: string = 'Add filter';
   @Input() emptyResultLabel: string = 'No records found';
   @Input() minCellWidth: number = 200;
-
-  @Output() add = new EventEmitter<any>();
-  @Output() pick = new EventEmitter<any[]>();
-  @Output() delete = new EventEmitter<any[]>();
 
   @ViewChild(MatTable, { static: true }) table: MatTable<any>;
   @ViewChild(MatTable, { static: true }) tableElement: ElementRef;
@@ -61,12 +63,8 @@ export class GridComponent implements OnInit, AfterViewInit, AfterContentInit {
   @ViewChild('filtersChipList', { static: true }) filtersChipList: MatChipList;
   
   @ContentChildren(MatColumnDef) matColumnDefs: QueryList<MatColumnDef>;
-  @ContentChildren(GridActionDirective) _gridActions: QueryList<GridActionDirective>;
-  @ContentChildren(GridFilterDirective) _gridFilters: QueryList<GridFilterDirective>;
-
-  constructor(
-    private _dialog: MatDialog
-  ) { }
+  @ContentChildren(GridActionDefDirective) _gridActionDefs: QueryList<GridActionDefDirective>;
+  @ContentChildren(GridFilterDefDirective) _gridFilterDefs: QueryList<GridFilterDefDirective>;
 
   get columns() {
     const columns = this._columns.slice();
@@ -78,14 +76,6 @@ export class GridComponent implements OnInit, AfterViewInit, AfterContentInit {
     columns.push('_actions');
 
     return columns;
-  }
-
-  get filters() {
-    return this._filters;
-  }
-
-  get actions() {
-    return this._actions;
   }
 
   get showFilters() {
@@ -117,36 +107,30 @@ export class GridComponent implements OnInit, AfterViewInit, AfterContentInit {
 
   get gridFilters() {
     return this
-      .filters
-      .map(filterField => this._gridFilters.find(filter =>  filter.field === filterField))
-      .filter(filter => filter !== undefined);
+      .visibleFilterNames
+      .map(filterField => this._gridFilterDefs.find(filter => filter.field === filterField))
+      .filter(filter => filter !== undefined)
+    ;
   }
 
-  get gridActions() {
+  get allActions() {
     return this
-      .actions
-      .map(actionName => this._gridActions.find(action =>  action.name === actionName))
-      .filter(action => action !== undefined);
+      .visbleActionNames
+      .map(actionName => this._gridActionDefs.find(action =>  action.name === actionName))
+      .filter(action => action !== undefined)
+    ;
   }
 
-  get rowActions() {
-    return this.gridActions.filter(action => !action.more);
+  getGridActions() {
+    return this.allActions.filter(action => (action.strategy === Strategy.GRID) && (action.shouldShow()));
   }
 
   getRowActions(rows: any[]) {
-    return this.gridActions.filter(action => !action.more && action.show(rows));
-  }
-
-  get moreRowActions() {
-    return this.gridActions.filter(action => action.more && action.show(this.dataSource.selection));
+    return this.allActions.filter(action => (action.strategy === Strategy.ROW) && (action.shouldShow(rows)));
   }
 
   getMoreRowActions(rows: any[]) {
-    return this.gridActions.filter(action => action.more && action.show(rows));
-  }
-
-  get dialog() {
-    return this._dialog;
+    return this.allActions.filter(action => (action.strategy === Strategy.MORE) && (action.shouldShow(rows)));
   }
 
   get filtersInputControl() {
@@ -157,40 +141,41 @@ export class GridComponent implements OnInit, AfterViewInit, AfterContentInit {
     return this._filterQuery;
   }
 
-  openFilterDialog(filter: GridFilterDirective) {
-    const config = Object.assign({}, filter.dialogConfig);
-    config.data = Object.assign({}, config.data, {
-      value: filter.value,
-      title: filter.title
-    });
-    const dialogRef: MatDialogRef<any> = this.dialog.open(filter.dialog, config);
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        filter.value = result;
-        this.dataSource.activateFilter(filter);
-      }
-      this.filterInput.nativeElement.blur();
-      this.filterInputTrigger.closePanel();
-    });
+  openFilterDialog(filter: GridFilterDefDirective) {
+    const dialog = filter.openDialog();
+    if (dialog) {
+      dialog.subscribe(value => {
+        if (value) {
+          filter.value = value;
+          this.dataSource.activateFilter(filter);
+        }
+        this.filterInput.nativeElement.blur();
+        this.filterInputTrigger.closePanel();
+      });
+    }
   }
 
   onFilterSelect(event: MatAutocompleteSelectedEvent) {
-    if ((<GridFilterDirective>event.option.value).dialog && !this.filterQuery) {
-      this.openFilterDialog((<GridFilterDirective>event.option.value));
+    const filter: GridFilterDefDirective = event.option.value;
+    
+    if (filter.dialog && !this.filterQuery) {
+      this.openFilterDialog(filter);
     } else {
-      (<GridFilterDirective>event.option.value).value = (<GridFilterDirective>event.option.value).toModel(this.filterQuery);
-      this.dataSource.activateFilter((<GridFilterDirective>event.option.value));
+      filter.value = filter.convertToModelValue(this.filterQuery);
+      this.dataSource.activateFilter(filter);
     }
+    
     this.filterInput.nativeElement.value = '';
     this.filterInput.nativeElement.blur();
     this.filtersInputControl.setValue(null);
   }
 
   onFilterRemove(event: MatChipEvent) {
-    this.dataSource.deactivateFilter((<GridFilterDirective>event.chip.value));
+    const filter: GridFilterDefDirective = event.chip.value;
+    this.dataSource.deactivateFilter(filter);
   }
 
-  onFilterEdit(filter: GridFilterDirective, event: MouseEvent) {
+  onFilterEdit(filter: GridFilterDefDirective) {
     this.openFilterDialog(filter);
   }
 
@@ -201,20 +186,7 @@ export class GridComponent implements OnInit, AfterViewInit, AfterContentInit {
   }
 
   get actionsMargin() {
-    // console.log(this.tableElement);
     return 300;
-  }
-
-  addRow() {
-    this.add.next();
-  }
-
-  pickRows(rows: any[]) {
-    this.pick.emit(rows);
-  }
-
-  deleteRows(rows: any[]) {
-    this.delete.emit(rows);
   }
 
   setHoveredRow(index: number|null) {
@@ -233,5 +205,22 @@ export class GridComponent implements OnInit, AfterViewInit, AfterContentInit {
 
   get minRowWidth() {
     return (this.columns.length - 1 - (this.showSelection ? 1 : 0)) * this.minCellWidth + (this.showSelection ? 72 : 0);
+  }
+
+
+  get activeFilters(): GridFilterDefDirective[] {
+    return this
+      .dataSource
+      .filters
+      .filter(filter => filter.isActive)
+    ;
+}
+
+  get availableFilters(): GridFilterDefDirective[] {
+    return this
+      .dataSource
+      .filters
+      .filter(filter => !filter.isActive && filter.shouldSupport(this.filterQuery))
+    ;
   }
 }

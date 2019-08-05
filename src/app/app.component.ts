@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { SimpleDataSource } from './simple-data-source';
 import { TranslateService } from '@ngx-translate/core';
-import { GridFilterContext, GridActionContext } from 'material-grid';
-import { TextPickComponent } from './text-pick/text-pick.component';
+import { TextPickComponent, ITextPickComponent } from './text-pick/text-pick.component';
+import { MatDialog } from '@angular/material';
 
 @Component({
   selector: 'app-root',
@@ -12,54 +12,29 @@ import { TextPickComponent } from './text-pick/text-pick.component';
 export class AppComponent {
   dataSource: SimpleDataSource = new SimpleDataSource();
 
-  public positionFilterContext: GridFilterContext = new GridFilterContext({
-    support: true,
-    dialog: TextPickComponent
-  });
+  showForSingleRow(rows: any) {
+    return rows.length === 1;
+  }
 
-  public nameFilterContext: GridFilterContext = new GridFilterContext({
-    support: true,
-  });
+  showForMultipleRows(rows: any) {
+    return rows.length > 1;
+  }
 
-  public weightFilterContext: GridFilterContext = new GridFilterContext({
-    support: true,
-  });
-
-  public symbolFilterContext: GridFilterContext = new GridFilterContext({
-    support: true,
-  });
-
-  public viewActionContext = new GridActionContext({
-    self: this,
-    show: (rows: any[]) => rows.length === 1,
-    icon: 'pageview'
-  });
-
-  public editActionContext = new GridActionContext({
-    self: this,
-    show: (rows: any[]) => rows.length === 1,
-    icon: 'edit'
-  });
-
-  public shuffleActionContext = new GridActionContext({
-    self: this,
-    show: (rows: any[]) => rows.length > 1,
-    icon: 'shuffle',
-    more: true
-  });
-
-  public deleteActionContext = new GridActionContext({
-    self: this,
-    icon: 'delete',
-    show: () => true,
-    more: false
-  });
+  openTextFilterDialog(value: string) {
+    return this.dialog.open<TextPickComponent, ITextPickComponent>(TextPickComponent, {
+      data: {
+        value: value
+      }
+    }).afterClosed();
+  }
 
   constructor(
-    private translate: TranslateService
+    private translate: TranslateService,
+    private dialog: MatDialog
   ) {
     this.translate.setDefaultLang('ru');
     this.translate.use('ru');
+    console.log(this.dialog);
   }
 
   get showAdd() {
@@ -89,20 +64,30 @@ export class AppComponent {
     return ['position', 'name', 'weight', 'symbol'];
   }
   get actions() {
-    return ['view', 'edit', 'shuffle', 'delete'];
-  }
-  addRow($event) {
-
-  }
-  pickRows($event) {
-
+    return ['calculate', 'add', 'view', 'edit', 'shuffle', 'delete'];
   }
   
+  addAction($event) {
+    console.log('Called addAction', $event);
+  }
+
+  calculateAction($event) {
+    console.log('Called calculateAction', $event);
+  }
+
   viewAction($event) {
     console.log('Called viewAction', $event);
   }
 
   shuffleAction($event) {
     console.log('Called shuffleAction', $event);
+  }
+
+  editAction($event) {
+    console.log('Called editAction', $event);
+  }
+
+  deleteAction($event) {
+    console.log('Called deleteAction', $event);
   }
 }

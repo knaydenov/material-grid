@@ -1,22 +1,18 @@
 <grid 
   [dataSource]="dataSource" 
-  [showAdd] = "showAdd"
-  [showPick] = "showPick"
   [showSelection] = "showSelection"
   [showState] = "showState"
   [showFilters] = "showFilters"
   [columns]="columns"
   [filters]="filters"
   [actions]="actions"
-  (add)="addRow($event)"
-  (pick)="pickRows($event)" 
   matSort
 >
 
   <!-- Position Column -->
   <ng-container matColumnDef="position">
     <mat-header-cell *matHeaderCellDef mat-sort-header>
-      <span translate>item.position</span>
+      <span translate>Position</span>
     </mat-header-cell>
     <mat-cell *matCellDef="let item">
       <p>
@@ -28,7 +24,7 @@
   <!-- Name Column -->
   <ng-container matColumnDef="name">
     <mat-header-cell *matHeaderCellDef mat-sort-header>
-      <span translate>item.name</span>
+      <span translate>Name</span>
     </mat-header-cell>
     <mat-cell *matCellDef="let item">
       <p>
@@ -40,7 +36,7 @@
   <!-- Weight Column -->
   <ng-container matColumnDef="weight">
     <mat-header-cell *matHeaderCellDef mat-sort-header>
-      <span translate>item.weight</span>
+      <span translate>Weight</span>
     </mat-header-cell>
     <mat-cell *matCellDef="let item">
       <p>
@@ -52,7 +48,7 @@
   <!-- Symbol Column -->
   <ng-container matColumnDef="symbol">
     <mat-header-cell *matHeaderCellDef mat-sort-header>
-      <span translate>item.symbol</span>
+      <span translate>Symbol</span>
     </mat-header-cell>
     <mat-cell *matCellDef="let item">
       <p>
@@ -62,17 +58,19 @@
   </ng-container>
 
   <!-- Actions -->
-  <grid-action name="view" (handler)="viewAction($event)" [context]="viewActionContext"></grid-action>
-  <grid-action name="edit" (handler)="editAction($event)" [context]="editActionContext"></grid-action>
-  <grid-action name="shuffle" (handler)="shuffleAction($event)" [context]="shuffleActionContext"></grid-action>
-  <grid-action name="delete" (handler)="confirmDelete($event)" [context]="deleteActionContext"></grid-action>
+  <grid-action *gridActionDef="let action; name 'add'; label: 'Add'; icon 'add';  strategy: 'grid'; handler: addAction; this: this"></grid-action>
+  <grid-action *gridActionDef="let action; name 'calculate'; label: 'Calculate';  strategy: 'grid'; handler: calculateAction; enable: false, this: this"></grid-action>
+  <grid-action *gridActionDef="let action; name 'view'; label: 'View'; icon 'pageview'; show: showForSingleRow; handler: viewAction; this: this"></grid-action>
+  <grid-action *gridActionDef="let action; name 'edit'; label: 'Edit'; icon 'edit'; show: showForSingleRow; handler: editAction; this: this"></grid-action>
+  <grid-action *gridActionDef="let action; name 'shuffle'; label: 'Shuffle'; icon 'shuffle'; strategy: 'more'; show: showForMultipleRows; handler: shuffleAction; this: this"></grid-action>
+  <grid-action *gridActionDef="let action; name 'delete'; label: 'Delete'; icon 'delete'; handler: deleteAction; this: this"></grid-action>
   <!-- End Actions -->
 
   <!-- Filters -->
-  <grid-filter field="position" [context]="positionFilterContext"></grid-filter>
-  <grid-filter field="name" [context]="nameFilterContext"></grid-filter>
-  <grid-filter field="weight" [context]="weightFilterContext"></grid-filter>
-  <grid-filter field="symbol" [context]="symbolFilterContext"></grid-filter>
+  <grid-filter *gridFilterDef="let filter; field 'position'; label 'Position'; this: this"></grid-filter>
+  <grid-filter *gridFilterDef="let filter; field 'name'; label 'Name'; dialog: openTextFilterDialog; this: this"></grid-filter>
+  <grid-filter *gridFilterDef="let filter; field 'weight'; label 'Weight'; this: this"></grid-filter>
+  <grid-filter *gridFilterDef="let filter; field 'symbol'; label 'Symbol'; this: this"></grid-filter>
   <!-- End Filters -->
 
 </grid>

@@ -3,42 +3,38 @@
   <div class="grid__header" [ngClass]="{'grid__header--has-selection': dataSource.hasSelection}">
     <ng-container [ngSwitch]="dataSource.hasSelection">
       <ng-container *ngSwitchCase="false">
-        <div class="grid__title" *ngIf="title">{{ title | translate }}</div>
+        <div class="grid__title" *ngIf="title">{{ title }}</div>
         <div class="grid__header-actions">
-          <button color="primary" mat-button *ngIf="showAdd" (click)="addRow()">{{ addLabel | translate }}</button>
+          <button *ngFor="let action of getGridActions()" color="primary" mat-button (click)="action.handle()" [disabled]="!action.shouldEnable()">
+            <mat-icon *ngIf="action.icon">{{ action.icon }}</mat-icon>
+            {{ action.label }}
+          </button>
         </div>
         <div class="grid__header-spacer"></div>
         <div class="grid__header-actions">
-          <button mat-icon-button (click)="dataSource.refresh()" [matTooltip]="actionRefreshLabel | translate">
+          <button mat-icon-button (click)="dataSource.refresh()" [matTooltip]="refreshLabel" [disabled]="dataSource.isLoading">
             <mat-icon>refresh</mat-icon>
           </button>
         </div>
       </ng-container>
       <ng-container *ngSwitchCase="true">
         <div *ngIf="dataSource.selection.length" class="grid__selection-label">
-          {{ selectionLabel | translate:{count: dataSource.selection.length}  }}
+          {{ selectionLabel }}: dataSource.selection.length
         </div>
         <div class="grid__header-spacer"></div>
         <div class="grid__header-actions">
-          <button mat-icon-button *ngIf="showPick" (click)="pickRows(dataSource.selection)" [matTooltip]="actionPickLabel | translate">
-            <mat-icon>forward</mat-icon>
+          <button *ngFor="let action of getRowActions(dataSource.selection)" mat-icon-button (click)="action.handle(dataSource.selection)" [matTooltip]="action.label" [disabled]="!action.shouldEnable(dataSource.selection)">
+            <mat-icon *ngIf="action.icon">{{ action.icon }}</mat-icon>
           </button>
-          <ng-container *ngFor="let action of getRowActions(dataSource.selection)">
-              <button mat-icon-button (click)="action.handle(dataSource.selection)" [matTooltip]="action.label | translate">
-                  <mat-icon>{{ action.icon }}</mat-icon>
-                </button>
-          </ng-container>
           <ng-container *ngIf="getMoreRowActions(dataSource.selection).length">
-            <button mat-icon-button [matMenuTriggerFor]="moreMassActionsMenu" [matTooltip]="actionMoreLabel | translate">
+            <button mat-icon-button [matMenuTriggerFor]="moreMassActionsMenu" [matTooltip]="moreLabel">
               <mat-icon>more_vert</mat-icon>
             </button>
             <mat-menu #moreMassActionsMenu="matMenu">
-              <ng-container *ngFor="let action of getMoreRowActions(dataSource.selection)">
-                <button mat-menu-item (click)="action.handle(dataSource.selection)" [matTooltip]="action.label | translate">
-                  <mat-icon>{{ action.icon }}</mat-icon>
-                  <span>{{ action.label | translate }}</span>
-                </button>
-              </ng-container>
+              <button *ngFor="let action of getMoreRowActions(dataSource.selection)" mat-menu-item (click)="action.handle(dataSource.selection)" [matTooltip]="action.label" [disabled]="!action.shouldEnable(dataSource.selection)">
+                <mat-icon *ngIf="action.icon">{{ action.icon }}</mat-icon>
+                <span>{{ action.label }}</span>
+              </button>
             </mat-menu>
           </ng-container>
         </div>
@@ -50,23 +46,19 @@
   <mat-progress-bar *ngIf="dataSource.isLoading" mode="indeterminate"></mat-progress-bar>
   <div class="grid__filters" style="overflow: hidden;" *ngIf="showFilters">
     <mat-chip-list #filtersChipList>
-      <mat-chip class="grid__filter-placeholder" *ngIf="!dataSource.activeFilters.length && !filtersAutocomplete.isOpen" disabled (click)="onAddFilter($event)">
+      <mat-chip class="grid__filter-placeholder" *ngIf="!activeFilters.length && !filtersAutocomplete.isOpen" disabled (click)="onAddFilter($event)">
           <mat-icon>add</mat-icon>
-        {{ addFilterLabel | translate }}
+        {{ addFilterLabel }}
       </mat-chip>
-      <mat-chip *ngFor="let filter of dataSource.activeFilters" [value]="filter" (removed)="onFilterRemove($event)" (click)="onFilterEdit(filter, $event)">
-        {{ filter.label | translate }}: 
-        <ng-container [ngSwitch]="filter.multiple">
-          <ng-container *ngSwitchCase="true">{{ filter.viewValue }}</ng-container>
-          <ng-container *ngSwitchCase="false">{{ filter.viewValue | translate }}</ng-container>
-        </ng-container>
+      <mat-chip *ngFor="let filter of activeFilters" [value]="filter" (removed)="onFilterRemove($event)" (click)="onFilterEdit(filter)">
+        {{ filter.label }}: {{ filter.viewValue }}
         <mat-icon matChipRemove>cancel</mat-icon>
       </mat-chip>
       <input #filterInput [formControl]="filtersInputControl" [matChipInputFor]="filtersChipList" [matAutocomplete]="filtersAutocomplete" />
     </mat-chip-list>
     <mat-autocomplete #filtersAutocomplete="matAutocomplete" (optionSelected)="onFilterSelect($event)" [autoActiveFirstOption]="true">
-      <mat-option *ngFor="let filter of dataSource.availableFilters" [value]="filter">
-          {{ filter.label | translate }}<ng-container *ngIf="filter.query">: {{ filter.query }}</ng-container>
+      <mat-option *ngFor="let filter of availableFilters" [value]="filter">
+          {{ filter.label }}<ng-container *ngIf="filter.query">: {{ filter.query }}</ng-container>
       </mat-option>
     </mat-autocomplete>
   </div>
@@ -88,25 +80,18 @@
       <ng-container matColumnDef="_actions">
         <mat-header-cell *matHeaderCellDef style="display: none"></mat-header-cell>
         <mat-cell *matCellDef="let row; let i = index" class="grid__row-actions">
-          <button *ngIf="showPick" mat-icon-button [matTooltip]="actionPickLabel | translate"  (click)="pickRows([row])">
-              <mat-icon>forward</mat-icon>
+          <button *ngFor="let action of getRowActions([row])" mat-icon-button (click)="action.handle([row])" [matTooltip]="action.label" [disabled]="!action.shouldEnable([row])">
+            <mat-icon *ngIf="action.icon">{{ action.icon }}</mat-icon>
           </button>
-          <ng-container *ngFor="let action of getRowActions([row])">
-              <button mat-icon-button (click)="action.handle([row])" [matTooltip]="action.label | translate">
-                  <mat-icon>{{ action.icon }}</mat-icon>
-                </button>
-          </ng-container>
           <ng-container *ngIf="getMoreRowActions([row]).length">
-            <button mat-icon-button [matMenuTriggerFor]="moreRowActionsMenu" [matTooltip]="actionMoreLabel | translate" (menuOpened)="setRowMenuOpenState(true)" (menuClosed)="setRowMenuOpenState(false)">
+            <button mat-icon-button [matMenuTriggerFor]="moreRowActionsMenu" [matTooltip]="moreLabel" (menuOpened)="setRowMenuOpenState(true)" (menuClosed)="setRowMenuOpenState(false)">
               <mat-icon>more_vert</mat-icon>
             </button>
             <mat-menu #moreRowActionsMenu="matMenu">
-              <ng-container *ngFor="let action of getMoreRowActions([row])">
-                <button mat-menu-item (click)="action.handle([row])" [matTooltip]="action.label | translate">
-                  <mat-icon>{{ action.icon }}</mat-icon>
-                  <span>{{ action.label | translate }}</span>
-                </button>
-              </ng-container>
+              <button *ngFor="let action of getMoreRowActions([row])" mat-menu-item (click)="action.handle([row])" [matTooltip]="action.label" [disabled]="!action.shouldEnable([row])">
+                <mat-icon *ngIf="action.icon">{{ action.icon }}</mat-icon>
+                <span>{{ action.label }}</span>
+              </button>
             </mat-menu>
           </ng-container>
         </mat-cell>
@@ -120,6 +105,6 @@
     </mat-paginator>
   </div>
   <div class="grid__content" [ngClass]="{'grid__content--hidden': dataSource.total}">
-    <div class="grid__empty-result">{{ emptyResultLabel | translate }}</div>
+    <div class="grid__empty-result">{{ emptyResultLabel }}</div>
   </div>
 </div>

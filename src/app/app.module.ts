@@ -8,8 +8,9 @@ import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppComponent } from './app.component';
-import { MatTableModule } from '@angular/material';
+import { MatTableModule, MatDialogModule, MatPaginatorModule, MatCardModule, MatTooltipModule, MatIconModule, MatButtonModule, MatPseudoCheckboxModule, MatAutocompleteModule, MatChipsModule, MatProgressBarModule, MatDividerModule, MatMenuModule } from '@angular/material';
 import { TextPickComponent } from './text-pick/text-pick.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -25,6 +26,21 @@ export function createTranslateLoader(http: HttpClient) {
     BrowserAnimationsModule,
     MaterialGridModule,
     HttpClientModule,
+    MatDialogModule,
+    MatPaginatorModule,
+    MatCardModule,
+    MatTableModule,
+    MatTooltipModule,
+    MatIconModule,
+    MatButtonModule,
+    MatPseudoCheckboxModule,
+    MatAutocompleteModule,
+    MatChipsModule,
+    MatProgressBarModule,
+    MatDividerModule,
+    MatMenuModule,
+    MatIconModule,
+    ReactiveFormsModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
