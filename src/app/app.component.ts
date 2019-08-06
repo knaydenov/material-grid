@@ -28,6 +28,15 @@ export class AppComponent {
     }).afterClosed();
   }
 
+  openSymbolFilterDialog(value: string[]) {
+    return this.dialog.open<TextPickComponent, ITextPickComponent>(TextPickComponent, {
+      data: {
+        value: value,
+        multiple: true
+      }
+    }).afterClosed();
+  }
+
   constructor(
     private translate: TranslateService,
     private dialog: MatDialog

@@ -80,7 +80,13 @@ export class GridFilterDefDirective {
   }
 
   get viewValue() {
-    return this.convertToViewValue(this.value);
+    if (!this.value) {
+        return null;
+    } else if (this.multiple) {
+      return (<any[]>this.value).map(value => this.convertToViewValue(value)).join(', ');
+    } else {
+      return this.convertToViewValue(this.value);
+    }
   }
 
   get isActive() {

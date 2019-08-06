@@ -70,7 +70,7 @@
   <grid-filter *gridFilterDef="let filter; field 'position'; label 'Position'; this: this"></grid-filter>
   <grid-filter *gridFilterDef="let filter; field 'name'; label 'Name'; dialog: openTextFilterDialog; this: this"></grid-filter>
   <grid-filter *gridFilterDef="let filter; field 'weight'; label 'Weight'; this: this"></grid-filter>
-  <grid-filter *gridFilterDef="let filter; field 'symbol'; label 'Symbol'; this: this"></grid-filter>
+  <grid-filter *gridFilterDef="let filter; field 'symbol'; label 'Symbol'; dialog: openSymbolFilterDialog; multiple: true; this: this"></grid-filter>
   <!-- End Filters -->
 
 </grid>

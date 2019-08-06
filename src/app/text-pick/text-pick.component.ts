@@ -3,7 +3,8 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { FormControl } from '@angular/forms';
 
 export interface ITextPickComponent {
-  value?: string;
+  value?: string|string[];
+  multiple?: boolean;
 }
 
 @Component({
@@ -17,17 +18,15 @@ export class TextPickComponent implements OnInit {
     protected _dialogRef: MatDialogRef<TextPickComponent>,
     @Optional() @Inject(MAT_DIALOG_DATA) protected _data: ITextPickComponent
   ) {
-    this.textControl = new FormControl(this.value);
+    this.textControl = new FormControl(this._data.value);
   }
 
   get value() {
-    return this._data.value;
+    if (!this.textControl.value) {
+      return null;
+    }
+    return this._data.multiple ? (<string>this.textControl.value).split(';') : this.textControl.value;
   }
-
-  set value(value: string) {
-    this._data.value = value;
-  }
-
   ngOnInit() {
   }
 
