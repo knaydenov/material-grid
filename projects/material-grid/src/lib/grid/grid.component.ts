@@ -48,7 +48,7 @@ export class GridComponent implements OnInit, AfterViewInit, AfterContentInit {
     this._showFilters = showFilters;
   }
   @Input() pageSizeOptions: number[] = [5, 10, 50];
-  @Input() selectionLabel: string = 'Selected:';
+  @Input() selectionLabel: string = 'Selected';
   @Input() moreLabel: string = 'Show more actions';
   @Input() refreshLabel: string = 'Refresh';
   @Input() addFilterLabel: string = 'Add filter';
