@@ -19,7 +19,7 @@
       </ng-container>
       <ng-container *ngSwitchCase="true">
         <div *ngIf="dataSource.selection.length" class="grid__selection-label">
-          {{ selectionLabel }}: dataSource.selection.length
+          {{ selectionLabel }}: {{ dataSource.selection.length }}
         </div>
         <div class="grid__header-spacer"></div>
         <div class="grid__header-actions">
